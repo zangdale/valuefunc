@@ -200,6 +200,8 @@ func (vf *ValueFunc) SetValue(tag string, f func(v reflect.Value, canSet bool, a
 
 // Check 通过 cm 检查 in 的信息
 func (vf *ValueFunc) Check(in interface{}) (string, error) {
+	vf.Lock()
+	defer vf.Unlock()
 	return check(in, vf)
 }
 
@@ -275,8 +277,6 @@ func check(inter interface{}, vf *ValueFunc) (string, error) {
 	if vf == nil {
 		return "", ErrNilCheckFunc
 	}
-	vf.Lock()
-	defer vf.Unlock()
 
 	if vf.checkTag == "" {
 		vf.checkTag = checkTag
